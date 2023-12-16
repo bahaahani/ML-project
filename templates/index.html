@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en" class="flex flex-col min-h-screen">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Classification with Neural Networks</title>
+    <!-- Include Tailwind CSS from CDN -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.2/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+      #content {
+        flex: 1;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-100">
+    <!-- Navigation Bar -->
+    <nav class="bg-blue-600 p-4 shadow">
+      <div class="container mx-auto flex justify-between items-center">
+        <a href="#" class="text-white text-3xl font-bold">ImageClassifier</a>
+        <div class="text-lg">
+          <a href="#" class="text-white hover:text-blue-200 px-4">Home</a>
+          <a href="#" class="text-white hover:text-blue-200 px-4">About</a>
+          <a href="#" class="text-white hover:text-blue-200 px-4">Contact</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="bg-blue-500 text-white text-center p-8">
+      <h1 class="text-5xl font-bold mb-4">Natural Image Classifier</h1>
+      <p class="text-xl font-light">
+        An AI-powered web application that classifies natural images into
+        various categories.
+      </p>
+    </section>
+
+    <!-- Upload Form Section -->
+    <div id="content" class="container mx-auto px-4 py-8">
+      <div class="flex flex-col items-center">
+        <div class="w-full max-w-md">
+          <form
+            id="uploadForm"
+            class="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+            enctype="multipart/form-data"
+          >
+            <div class="mb-4">
+              <label
+                class="block text-gray-700 text-sm font-bold mb-2"
+                for="imageUpload"
+              >
+                Upload your image
+              </label>
+              <input
+                type="file"
+                id="imageUpload"
+                name="image"
+                accept="image/*"
+                class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                required
+              />
+            </div>
+            <div class="flex items-center justify-between">
+              <button
+                class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                type="submit"
+              >
+                Classify Image
+              </button>
+            </div>
+          </form>
+          <div id="prediction" class="flex justify-center">
+            <div class="max-w-sm rounded overflow-hidden shadow-lg bg-white">
+              <div class="px-6 py-4">
+                <div class="font-bold text-xl mb-2 text-center">
+                  Prediction Result
+                </div>
+                <p class="text-gray-700 text-base text-center">
+                  The model predicts the image as:
+                </p>
+                <p
+                  id="predictionResult"
+                  class="text-center text-lg text-blue-600 font-bold mt-2"
+                >
+                  <!-- Prediction will be dynamically inserted here by JavaScript -->
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-blue-600 text-white text-center p-4 mt-auto">
+      <p>&copy; 2023 ImageClassifier. All rights reserved.</p>
+    </footer>
+
+    <script>
+      document
+        .getElementById("uploadForm")
+        .addEventListener("submit", function (e) {
+          e.preventDefault();
+          const formData = new FormData(this);
+          fetch("/predict", {
+            method: "POST",
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              document.getElementById("predictionResult").textContent =
+                data.prediction;
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+              document.getElementById("predictionResult").textContent =
+                "Error making prediction";
+            });
+        });
+    </script>
+  </body>
+</html>
